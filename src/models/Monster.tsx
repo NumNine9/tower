@@ -17,6 +17,11 @@ export class Monster {
     public displayX: number;
     public displayY: number;
 
+    // Getter for the private pathIndex property
+    getPathIndex(): number {
+        return this.pathIndex;
+    }
+
     update() {
         const nextPosition = this.path.getNextPosition(this.pathIndex);
         if (nextPosition) {

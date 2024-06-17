@@ -41,6 +41,8 @@ const App: React.FC = () => {
   ]);
 
   const [monsters, setMonsters] = useState<Monster[]>([]);
+  const [lives, setLives] = useState(20);
+
   useEffect(() => {
     if (gameStarted) {
       const interval = setInterval(() => {
@@ -58,6 +60,15 @@ const App: React.FC = () => {
           prevMonsters.map((monster) => {
             monster.update();
             return monster;
+          }).filter((monster) => {
+            const currentIndex = monster.getPathIndex();
+            // console.log('current index:--->', currentIndex)
+            const nextPosition = monster.path.getNextPosition(currentIndex);
+            if (!nextPosition) {
+              setLives((prevLives) => prevLives - 1);
+              return false;
+            }
+            return true;
           })
         );
       }, 1000 / 50);
@@ -70,6 +81,7 @@ const App: React.FC = () => {
       <h1>Tower Defense Game</h1>
       <GameInfo
         gold={gold}
+        lives={lives}
         level={level}
         nextWave={nextWave}
         gameStarted={gameStarted}

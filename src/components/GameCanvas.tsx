@@ -8,7 +8,7 @@ interface GameCanvasProps {
     addTower: (tower: Tower) => void;
     gold: number;
     selectedTower: TowerType;
-    monsters: Monster[]
+    monsters: Monster[];
 }
 
 const GameCanvas: React.FC<GameCanvasProps> = ({ towers, addTower, gold, selectedTower, monsters }) => {

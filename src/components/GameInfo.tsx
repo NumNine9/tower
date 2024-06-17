@@ -5,10 +5,11 @@ interface GameInfoProps {
     level: number;
     nextWave: number;
     gameStarted: boolean;
+    lives: number;
     toggleGameStart: () => void;
 }
 
-const GameInfo: React.FC<GameInfoProps> = ({ gold, level, nextWave, gameStarted, toggleGameStart }) => {
+const GameInfo: React.FC<GameInfoProps> = ({ gold, level, nextWave, gameStarted, toggleGameStart, lives }) => {
     return (
         <div>
             <button onClick={toggleGameStart}>
@@ -16,6 +17,7 @@ const GameInfo: React.FC<GameInfoProps> = ({ gold, level, nextWave, gameStarted,
             </button>
             <div>Gold: {gold}</div>
             <div>Level: {level}</div>
+            <div>Lives: {lives}</div>
             <div>Next Wave: {Math.floor(nextWave / 50)} seconds</div>
         </div>
     );
