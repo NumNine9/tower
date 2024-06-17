@@ -1,15 +1,17 @@
 import React, { useEffect, useRef, useCallback } from 'react';
 import { FIELD_SIZE } from '../utils/constants';
 import { Tower, TowerType } from '../models/Tower';
+import { Monster } from '../models/Monster';
 
 interface GameCanvasProps {
     towers: Tower[];
     addTower: (tower: Tower) => void;
     gold: number;
     selectedTower: TowerType;
+    monsters: Monster[]
 }
 
-const GameCanvas: React.FC<GameCanvasProps> = ({ towers, addTower, gold, selectedTower }) => {
+const GameCanvas: React.FC<GameCanvasProps> = ({ towers, addTower, gold, selectedTower, monsters }) => {
     const canvasRef = useRef<HTMLCanvasElement>(null);
 
     const handleCanvasClick = useCallback(
@@ -34,9 +36,10 @@ const GameCanvas: React.FC<GameCanvasProps> = ({ towers, addTower, gold, selecte
                 ctx.fillStyle = 'lightgreen';
                 ctx.fillRect(0, 0, canvas.width, canvas.height);
                 towers.forEach((tower) => tower.draw(ctx));
+                monsters.forEach((monster) => monster.display(ctx));
             }
         }
-    }, [towers]);
+    }, [towers, monsters]);
 
     return (
         <canvas
