@@ -3,10 +3,10 @@ import GameInfo from './components/GameInfo';
 import TowerSelector from './components/TowerSelector';
 import GameCanvas from './components/GameCanvas';
 import { Tower, TowerType } from './models/Tower';
-import { INITIAL_GOLD, NEXT_WAVE_TIME } from './utils/constants';
+import { INITIAL_GOLD, NEXT_WAVE_TIME, FIELD_SIZE } from './utils/constants';
 import { Monster } from './models/Monster';
 import { MonsterPath } from './models/MonsterPath';
-
+import { Shot } from './models/Shot';
 
 
 
@@ -42,6 +42,7 @@ const App: React.FC = () => {
 
   const [monsters, setMonsters] = useState<Monster[]>([]);
   const [lives, setLives] = useState(20);
+  const [shots, setShots] = useState<Shot[]>([]);
 
   useEffect(() => {
     if (gameStarted) {
@@ -71,10 +72,46 @@ const App: React.FC = () => {
             return true;
           })
         );
+
+        towers.forEach((tower) => tower.update());
+        const newShots: Shot[] = [];
+        towers.forEach((tower) => {
+          if (tower.canShoot()) {
+            monsters.forEach((monster) => {
+              const distance = Math.hypot(
+                tower.x * FIELD_SIZE - monster.displayX,
+                tower.y * FIELD_SIZE - monster.displayY
+              );
+              if (distance < 100) { // example shooting range
+                newShots.push(new Shot(tower.x * FIELD_SIZE, tower.y * FIELD_SIZE, tower.type, monster));
+                tower.resetCooldown();
+              }
+            });
+          }
+        });
+
+        setShots((prevShots) => [...prevShots, ...newShots]);
+
+        setShots((prevShots) =>
+          prevShots.map((shot) => {
+            shot.update();
+            return shot;
+          }).filter((shot) => {
+            const distance = Math.hypot(
+              shot.x - shot.goal.displayX,
+              shot.y - shot.goal.displayY
+            );
+            if (distance < 5) {
+              shot.goal.lives--;
+              return false;
+            }
+            return true;
+          })
+        );
       }, 1000 / 50);
       return () => clearInterval(interval);
     }
-  }, [gameStarted, nextWave, monsters]);
+  }, [gameStarted, nextWave, monsters, shots]);
 
   return (
     <div>
@@ -96,6 +133,7 @@ const App: React.FC = () => {
         addTower={addTower}
         gold={gold}
         monsters={monsters}
+        shots={shots}
         selectedTower={selectedTower}
       />
     </div>
