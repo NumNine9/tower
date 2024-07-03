@@ -7,6 +7,7 @@ import { INITIAL_GOLD, NEXT_WAVE_TIME, FIELD_SIZE } from './utils/constants';
 import { Monster } from './models/Monster';
 import { MonsterPath } from './models/MonsterPath';
 import { Shot } from './models/Shot';
+import './App.css';
 
 
 
@@ -115,27 +116,38 @@ const App: React.FC = () => {
 
   return (
     <div>
-      <h1>Tower Defense Game</h1>
-      <GameInfo
-        gold={gold}
-        lives={lives}
-        level={level}
-        nextWave={nextWave}
-        gameStarted={gameStarted}
-        toggleGameStart={() => toggleGameStart()}
-      />
-      <TowerSelector
-        selectedTower={selectedTower}
-        onTowerSelect={setSelectedTower}
-      />
-      <GameCanvas
-        towers={towers}
-        addTower={addTower}
-        gold={gold}
-        monsters={monsters}
-        shots={shots}
-        selectedTower={selectedTower}
-      />
+      <h1 className='title'>Tower Defense Game</h1>
+      <div className='main_container'>
+        <GameInfo
+          gold={gold}
+          lives={lives}
+          level={level}
+          nextWave={nextWave}
+          gameStarted={gameStarted}
+          toggleGameStart={() => toggleGameStart()}
+        />
+        <div className='game_container'>
+          <div>
+            <GameCanvas
+              towers={towers}
+              addTower={addTower}
+              gold={gold}
+              monsters={monsters}
+              shots={shots}
+              selectedTower={selectedTower}
+            />
+          </div>
+          <div>
+            <TowerSelector
+              selectedTower={selectedTower}
+              onTowerSelect={setSelectedTower}
+            />
+          </div>
+
+        </div>
+      </div>
+
+
     </div>
   );
 };

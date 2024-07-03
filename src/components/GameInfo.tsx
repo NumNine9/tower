@@ -1,5 +1,8 @@
 import React from 'react';
-
+import wave from '../assets/wave.svg';
+import attempts from '../assets/attempts.svg';
+import money from '../assets/gold.svg';
+import health from '../assets/health.svg';
 interface GameInfoProps {
     gold: number;
     level: number;
@@ -11,14 +14,15 @@ interface GameInfoProps {
 
 const GameInfo: React.FC<GameInfoProps> = ({ gold, level, nextWave, gameStarted, toggleGameStart, lives }) => {
     return (
-        <div>
-            <button onClick={toggleGameStart}>
+        <div className='info'>
+            <button className={gameStarted ? 'stop_button' : 'play_button'} onClick={toggleGameStart}>
                 {gameStarted ? 'Stop Game' : 'Start Game'}
             </button>
-            <div>Gold: {gold}</div>
-            <div>Level: {level}</div>
-            <div>Lives: {lives}</div>
-            <div>Next Wave: {Math.floor(nextWave / 50)} seconds</div>
+            {/* <img src={health}></img> */}
+            <div className='game_info'>Gold:<img src={money}></img>       {gold}</div>
+            <div className='game_info'>Level:<img src={wave}></img>       {level}</div>
+            <div className='game_info'>Lives:<img src={health}></img>     {lives}</div>
+            <div className='game_info'>Next Wave:<img src={attempts}></img>      {Math.floor(nextWave / 50)} seconds</div>
         </div>
     );
 };

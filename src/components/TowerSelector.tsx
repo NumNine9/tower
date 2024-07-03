@@ -10,6 +10,8 @@ interface TowerSelectorProps {
 const TowerSelector: React.FC<TowerSelectorProps> = ({ selectedTower, onTowerSelect }) => {
     return (
         <ToggleButtonGroup
+            color='standard'
+            className='toggle_group'
             value={selectedTower}
             exclusive
             onChange={(event, newTower) => onTowerSelect(newTower)}
