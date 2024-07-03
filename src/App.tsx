@@ -1,32 +1,30 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import GameInfo from './components/GameInfo';
-import TowerSelector from './components/TowerSelector';
-import GameCanvas from './components/GameCanvas';
-import { Tower, TowerType } from './models/Tower';
-import { INITIAL_GOLD, NEXT_WAVE_TIME, FIELD_SIZE } from './utils/constants';
-import { Monster } from './models/Monster';
-import { MonsterPath } from './models/MonsterPath';
-import { Shot } from './models/Shot';
-import './App.css';
-
-
-
+import React, { useState, useEffect } from 'react'; // Import necessary React hooks
+import GameInfo from './components/GameInfo'; // Import the GameInfo component
+import TowerSelector from './components/TowerSelector'; // Import the TowerSelector component
+import GameCanvas from './components/GameCanvas'; // Import the GameCanvas component
+import { Tower, TowerType } from './models/Tower'; // Import the Tower class and TowerType type
+import { INITIAL_GOLD, NEXT_WAVE_TIME, FIELD_SIZE } from './utils/constants'; // Import constants
+import { Monster } from './models/Monster'; // Import the Monster class
+import { MonsterPath } from './models/MonsterPath'; // Import the MonsterPath class
+import { Shot } from './models/Shot'; // Import the Shot class
+import './App.css'; // Import the CSS file
 
 const App: React.FC = () => {
-  const [gameStarted, setGameStarted] = useState(false);
-  const [gold, setGold] = useState(INITIAL_GOLD);
-  const [selectedTower, setSelectedTower] = useState<TowerType>('regular');
-  const [nextWave, setNextWave] = useState(NEXT_WAVE_TIME);
-  const [level, setLevel] = useState(1);
-  const [towers, setTowers] = useState<Tower[]>([]);
+  const [gameStarted, setGameStarted] = useState(false); // State to track if the game has started
+  const [gold, setGold] = useState(INITIAL_GOLD); // State to track the player's gold
+  const [selectedTower, setSelectedTower] = useState<TowerType>('regular'); // State to track the selected tower type
+  const [nextWave, setNextWave] = useState(NEXT_WAVE_TIME); // State to track time until the next wave
+  const [level, setLevel] = useState(1); // State to track the current level
+  const [towers, setTowers] = useState<Tower[]>([]); // State to track the placed towers
 
-  const toggleGameStart = () => setGameStarted((prev) => !prev);
+  const toggleGameStart = () => setGameStarted((prev) => !prev); // Function to toggle game start
 
   const addTower = (tower: Tower) => {
-    setTowers((prevTowers) => [...prevTowers, tower]);
-    setGold((prevGold) => prevGold - 20);
+    setTowers((prevTowers) => [...prevTowers, tower]); // Add a new tower to the towers array
+    setGold((prevGold) => prevGold - 20); // Deduct gold for placing a tower
   };
-  // Initialize path, towers, monsters, etc.
+
+  // Initialize the monster path with a series of coordinates
   const monsterPath = new MonsterPath([
     { x: 0, y: 6 },
     { x: 1, y: 6 },
@@ -51,41 +49,46 @@ const App: React.FC = () => {
     { x: 20, y: 6 }
   ]);
 
-  const [monsters, setMonsters] = useState<Monster[]>([]);
-  const [lives, setLives] = useState(20);
-  const [shots, setShots] = useState<Shot[]>([]);
+  const [monsters, setMonsters] = useState<Monster[]>([]); // State to track the monsters
+  const [lives, setLives] = useState(20); // State to track the player's lives
+  const [shots, setShots] = useState<Shot[]>([]); // State to track the shots
 
   useEffect(() => {
     if (gameStarted) {
       const interval = setInterval(() => {
-        setNextWave((prev) => prev - 1);
+        setNextWave((prev) => prev - 1); // Decrement the next wave timer
+
         if (nextWave <= 0) {
-          // Logic for starting the next wave
+          // If the next wave timer reaches 0, add a new monster
           setMonsters((prevMonsters) => [
             ...prevMonsters,
             new Monster(monsterPath.path[0].x, monsterPath.path[0].y, 3, monsterPath)
           ]);
-          setNextWave(NEXT_WAVE_TIME);
-          setLevel((prev) => prev + 1);
+          setNextWave(NEXT_WAVE_TIME); // Reset the next wave timer
+          setLevel((prev) => prev + 1); // Increment the level
         }
+
+        // Update the monsters' positions
         setMonsters((prevMonsters) =>
           prevMonsters.map((monster) => {
             monster.update();
             return monster;
           }).filter((monster) => {
             const currentIndex = monster.getPathIndex();
-            // console.log('current index:--->', currentIndex)
             const nextPosition = monster.path.getNextPosition(currentIndex);
             if (!nextPosition) {
-              setLives((prevLives) => prevLives - 1);
-              return false;
+              setLives((prevLives) => prevLives - 1); // Deduct a life if a monster reaches the end
+              return false; // Remove the monster
             }
-            return true;
+            return true; // Keep the monster
           })
         );
 
+        // Update the towers' cooldowns
         towers.forEach((tower) => tower.update());
         const newShots: Shot[] = [];
+
+        // Check if towers can shoot and create new shots
         towers.forEach((tower) => {
           if (tower.canShoot()) {
             monsters.forEach((monster) => {
@@ -93,16 +96,17 @@ const App: React.FC = () => {
                 tower.x * FIELD_SIZE - monster.displayX,
                 tower.y * FIELD_SIZE - monster.displayY
               );
-              if (distance < 100) { // example shooting range
+              if (distance < 100) { // If the monster is within range
                 newShots.push(new Shot(tower.x * FIELD_SIZE, tower.y * FIELD_SIZE, tower.type, monster));
-                tower.resetCooldown();
+                tower.resetCooldown(); // Reset the tower's cooldown
               }
             });
           }
         });
 
-        setShots((prevShots) => [...prevShots, ...newShots]);
+        setShots((prevShots) => [...prevShots, ...newShots]); // Add the new shots
 
+        // Update the shots' positions and check for hits
         setShots((prevShots) =>
           prevShots.map((shot) => {
             shot.update();
@@ -112,17 +116,17 @@ const App: React.FC = () => {
               shot.x - shot.goal.displayX,
               shot.y - shot.goal.displayY
             );
-            if (distance < 5) {
-              shot.goal.lives--;
-              return false;
+            if (distance < 5) { // If the shot hits the monster
+              shot.goal.lives--; // Reduce the monster's lives
+              return false; // Remove the shot
             }
-            return true;
+            return true; // Keep the shot
           })
         );
-      }, 1000 / 50);
-      return () => clearInterval(interval);
+      }, 1000 / 50); // Run the game logic 50 times per second
+      return () => clearInterval(interval); // Clear the interval when the component unmounts or game stops
     }
-  }, [gameStarted, nextWave, monsters, shots]);
+  }, [gameStarted, nextWave, monsters, shots, towers]); // Dependencies for the useEffect
 
   return (
     <div>
@@ -153,13 +157,10 @@ const App: React.FC = () => {
               onTowerSelect={setSelectedTower}
             />
           </div>
-
         </div>
       </div>
-
-
     </div>
   );
 };
 
-export default App;
+export default App; // Export the App component
