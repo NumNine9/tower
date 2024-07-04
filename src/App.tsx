@@ -8,6 +8,8 @@ import { Monster } from './models/Monster'; // Import the Monster class
 import { MonsterPath } from './models/MonsterPath'; // Import the MonsterPath class
 import { Shot } from './models/Shot'; // Import the Shot class
 import './App.css'; // Import the CSS file
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const App: React.FC = () => {
   const [gameStarted, setGameStarted] = useState(false); // State to track if the game has started
@@ -141,14 +143,26 @@ const App: React.FC = () => {
     setLives(3)
     setShots([])
   };
+  const notify = () => toast(`You have reached level ${level}. Gooo Crazy for 5 seconds!!!`
+  );
+  const addLife = () => {
+    setLives(lives + 1) //increses the live by one when special ability is activated
+  }
+  const addGold = () => {
+    setGold(gold + 20) //increses the gold by 20 when special ability is activated
+  }
   return (
     <div>
       <h1 className='title'>{(gameStarted && (lives < 0)) ? 'Game Over!' : 'Tower Defence'}</h1>
+      <ToastContainer />
       <div className='main_container'>
         <GameInfo
           gold={gold}
           lives={lives}
           level={level}
+          notify={() => notify()}
+          addGold={() => addGold()}
+          addLife={() => addLife()}
           nextWave={nextWave}
           gameStarted={gameStarted}
           resetGame={() => resetGame()}
@@ -156,6 +170,7 @@ const App: React.FC = () => {
         />
         <div className='game_container'>
           <div>
+
             <GameCanvas
               towers={towers}
               addTower={addTower}
