@@ -22,6 +22,10 @@ export class Monster {
     getPathIndex(): number {
         return this.pathIndex;
     }
+    setPathIndex(): number {
+        this.pathIndex = 0;
+        return this.pathIndex
+    }
 
     update() {
         const nextPosition = this.path.getNextPosition(this.pathIndex); // Get the next position from the path
@@ -44,6 +48,7 @@ export class Monster {
     }
 
     display(ctx: CanvasRenderingContext2D) {
+
         ctx.fillStyle = 'black'; // Set the fill color to black
         ctx.fillRect(this.displayX, this.displayY, FIELD_SIZE, FIELD_SIZE); // Draw the monster as a black rectangle
     }

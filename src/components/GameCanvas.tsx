@@ -38,7 +38,13 @@ const GameCanvas: React.FC<GameCanvasProps> = ({ towers, addTower, gold, selecte
                 ctx.fillStyle = 'lightgreen';
                 ctx.fillRect(0, 0, canvas.width, canvas.height);
                 towers.forEach((tower) => tower.draw(ctx));
-                monsters.forEach((monster) => monster.display(ctx));
+                monsters.forEach((monster) => {
+                    if (monster.lives > 0) {
+                        monster.display(ctx)
+                    } else {
+                        monster.setPathIndex()
+                    }
+                });
                 shots.forEach((shot) => shot.display(ctx));
             }
         }

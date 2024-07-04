@@ -16,14 +16,15 @@ const App: React.FC = () => {
   const [nextWave, setNextWave] = useState(NEXT_WAVE_TIME); // State to track time until the next wave
   const [level, setLevel] = useState(1); // State to track the current level
   const [towers, setTowers] = useState<Tower[]>([]); // State to track the placed towers
-
   const toggleGameStart = () => setGameStarted((prev) => !prev); // Function to toggle game start
 
   const addTower = (tower: Tower) => {
     setTowers((prevTowers) => [...prevTowers, tower]); // Add a new tower to the towers array
     setGold((prevGold) => prevGold - 20); // Deduct gold for placing a tower
   };
-
+  const increseGold = () => {
+    setGold((gold) => gold + 5); // Add gold for eliminating a monster
+  }
   // Initialize the monster path with a series of coordinates
   const monsterPath = new MonsterPath([
     { x: 0, y: 6 },
@@ -118,6 +119,7 @@ const App: React.FC = () => {
             );
             if (distance < 5) { // If the shot hits the monster
               shot.goal.lives--; // Reduce the monster's lives
+              increseGold()
               return false; // Remove the shot
             }
             return true; // Keep the shot
