@@ -1,5 +1,5 @@
 import { Monster } from './Monster'; // Import the Monster class from the specified file
-import { FIELD_SIZE } from '../utils/constants'; // Import the FIELD_SIZE constant from the specified file
+// import { FIELD_SIZE } from '../utils/constants'; // Import the FIELD_SIZE constant from the specified file
 
 export class Shot {
     constructor(

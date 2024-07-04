@@ -79,7 +79,7 @@ const App: React.FC = () => {
             const currentIndex = monster.getPathIndex();
             const nextPosition = monster.path.getNextPosition(currentIndex);
             if (!nextPosition) {
-              setLives((prevLives) => prevLives - 1); // Deduct a life if a monster reaches the end
+              setLives(lives - 1); // Deduct a life if a monster reaches the end
               return false; // Remove the monster
             }
             return true; // Keep the monster
