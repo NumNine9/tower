@@ -21,5 +21,9 @@
     "noFallthroughCasesInSwitch": true
   },
   "include": ["src"],
+  "typedocOptions": {
+        "entryPoints": ["./src/App.tsx","./src/models/Monster.tsx","./src/models/MonsterPath.tsx","./src/models/Shot.tsx","./src/models/Tower.tsx","./src/utils/constants.tsx",],
+        "out": "docs"
+    },
   "references": [{ "path": "./tsconfig.node.json" }]
 }
