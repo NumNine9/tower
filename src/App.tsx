@@ -18,6 +18,7 @@ const App: React.FC = () => {
   const [towers, setTowers] = useState<Tower[]>([]); // State to track the placed towers
   const toggleGameStart = () => setGameStarted((prev) => !prev); // Function to toggle game start
 
+
   const addTower = (tower: Tower) => {
     setTowers((prevTowers) => [...prevTowers, tower]); // Add a new tower to the towers array
     setGold((prevGold) => prevGold - 20); // Deduct gold for placing a tower
@@ -51,11 +52,11 @@ const App: React.FC = () => {
   ]);
 
   const [monsters, setMonsters] = useState<Monster[]>([]); // State to track the monsters
-  const [lives, setLives] = useState(20); // State to track the player's lives
+  const [lives, setLives] = useState(3); // State to track the player's lives
   const [shots, setShots] = useState<Shot[]>([]); // State to track the shots
 
   useEffect(() => {
-    if (gameStarted) {
+    if (gameStarted && (lives > 0)) {
       const interval = setInterval(() => {
         setNextWave((prev) => prev - 1); // Decrement the next wave timer
 
@@ -129,10 +130,20 @@ const App: React.FC = () => {
       return () => clearInterval(interval); // Clear the interval when the component unmounts or game stops
     }
   }, [gameStarted, nextWave, monsters, shots, towers]); // Dependencies for the useEffect
-
+  const resetGame = () => {
+    setGameStarted(false);
+    setGold(INITIAL_GOLD);
+    setSelectedTower('regular');
+    setNextWave(NEXT_WAVE_TIME);
+    setLevel(1);
+    setTowers([]);
+    setMonsters([])
+    setLives(3)
+    setShots([])
+  };
   return (
     <div>
-      <h1 className='title'>Tower Defense Game</h1>
+      <h1 className='title'>{(gameStarted && (lives < 0)) ? 'Game Over!' : 'Tower Defence'}</h1>
       <div className='main_container'>
         <GameInfo
           gold={gold}
@@ -140,6 +151,7 @@ const App: React.FC = () => {
           level={level}
           nextWave={nextWave}
           gameStarted={gameStarted}
+          resetGame={() => resetGame()}
           toggleGameStart={() => toggleGameStart()}
         />
         <div className='game_container'>

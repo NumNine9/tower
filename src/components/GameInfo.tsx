@@ -9,12 +9,16 @@ interface GameInfoProps {
     nextWave: number;
     gameStarted: boolean;
     lives: number;
+    resetGame: () => void;
     toggleGameStart: () => void;
 }
 
-const GameInfo: React.FC<GameInfoProps> = ({ gold, level, nextWave, gameStarted, toggleGameStart, lives }) => {
+const GameInfo: React.FC<GameInfoProps> = ({ gold, level, nextWave, gameStarted, resetGame, toggleGameStart, lives }) => {
     return (
         <div className='info'>
+            <button className='reset_button' onClick={resetGame}>
+                Reset
+            </button>
             <button className={gameStarted ? 'stop_button' : 'play_button'} onClick={toggleGameStart}>
                 {gameStarted ? 'Stop Game' : 'Start Game'}
             </button>
