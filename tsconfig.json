@@ -20,9 +20,9 @@
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true
   },
-  "include": ["src"],
+  "include": ["fol"],
   "typedocOptions": {
-        "entryPoints": ["./src/App.tsx","./src/models/Monster.tsx","./src/models/MonsterPath.tsx","./src/models/Shot.tsx","./src/models/Tower.tsx","./src/utils/constants.tsx",],
+        "entryPoints": ["./fol/App.tsx"],
         "out": "docs"
     },
   "references": [{ "path": "./tsconfig.node.json" }]
