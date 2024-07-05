@@ -14,7 +14,7 @@ This project is a Tower Defense game implemented in TypeScript using React. The 
 ## Installation
 1. **Clone the repository**:
    ```sh
-   git clone https://github.com/yourusername/tower-defense-game.git
+   git clone https://github.com/NumNine9/tower.git
    cd tower-defense-game
    ´´´
 2. **Install dependencies**:
